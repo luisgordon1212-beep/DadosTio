@@ -1,6 +1,6 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #1a1a1a; 
+    background-color: #1b3d2f; /* Fondo verde oscuro de respaldo */
     background-image: url('image_27b01f.png');
     background-size: cover;
     background-position: center;
@@ -15,11 +15,20 @@ body {
 
 .game-container {
     text-align: center;
-    background-color: rgba(52, 73, 94, 0.85);
+    /* Cambiamos el fondo del tablero a un tono verde esmeralda semi-transparente */
+    background-color: rgba(20, 50, 40, 0.85);
     padding: 30px;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    /* Añadimos un sutil resplandor verde de sombra */
+    box-shadow: 0 10px 30px rgba(0, 255, 100, 0.1), 0 10px 30px rgba(0,0,0,0.5);
     backdrop-filter: blur(5px);
+    border: 1px solid rgba(46, 204, 113, 0.3); /* Borde verde fino */
+}
+
+/* Título de la página en verde brillante */
+h1 {
+    color: #2ecc71;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .dice-container {
@@ -41,16 +50,17 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* --- CLASES DE COLORES (¡Aquí está el rojo!) --- */
-.rojo { background-color: #ff4d4d; color: white; }
+/* Clases de colores para los dados (se mantienen todos tus colores) */
 .azul { background-color: #3498db; color: white; }
 .amarillo { background-color: #f1c40f; color: #333; }
 .verde { background-color: #2ecc71; color: white; }
 .morado { background-color: #9b59b6; color: white; }
 .naranja { background-color: #e67e22; color: white; }
+.rojo { background-color: #e74c3c; color: white; }
 
+/* El botón principal ahora también es verde a juego */
 button {
-    background-color: #e74c3c;
+    background-color: #2ecc71;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -58,11 +68,13 @@ button {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
     transition: background 0.2s, transform 0.1s;
 }
 
 button:hover {
-    background-color: #c0392b;
+    background-color: #27ae60; /* Verde más oscuro al pasar el mouse */
 }
 
 button:active {
