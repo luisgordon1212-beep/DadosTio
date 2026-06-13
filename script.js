@@ -32,7 +32,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
     selector.disabled = true;
     button.textContent = 'Rolling!';
 
-    let tiempoRestante = 2; // Manteniendo tus 2 segundos de animación
+    let tiempoRestante = 1; // ¡Ajustado a 1 segundo exacto!
 
     for (let i = 1; i <= cantidadDadosActivos; i++) {
         const statusElement = document.getElementById(`status-${i}`);
@@ -70,6 +70,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
                 const colorFinal = colores[Math.floor(Math.random() * colores.length)];
                 diceElement.className = 'dice ' + colorFinal;
                 
+                // Suma inmediata al contador de color
                 estadisticas[colorFinal]++;
                 document.getElementById(`count-${colorFinal}`).textContent = estadisticas[colorFinal];
                 
@@ -81,7 +82,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
             selector.disabled = false;
             button.textContent = 'Roll Dice';
         }
-    }, 1000);
+    }, 1000); // Frena justo al cumplir el primer segundo
 });
 
 actualizarCantidadDados();
