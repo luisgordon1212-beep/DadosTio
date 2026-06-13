@@ -147,3 +147,14 @@ document.getElementById('roll-btn').addEventListener('click', function() {
 });
 
 actualizarCantidadDados();
+
+function dispararEfectoEspecial() {
+    const contenedor = document.querySelector('.game-container');
+    const cuerpo = document.body;
+
+    contenedor.classList.add('shake-efecto');
+    cuerpo.classList.add('flash-efecto');
+
+    setTimeout(() => { contenedor.classList.remove('shake-efecto'); }, 300);
+    setTimeout(() => { cuerpo.classList.remove('flash-efecto'); }, 400);
+}
