@@ -10,8 +10,35 @@ const estadisticas = {
     rojo: 0
 };
 
-// Cargamos un sonido público de dados rodando (puedes cambiar este link si tienes tu propio audio)
-const sonidoDados = new Audio('https://assets.mixkit.co/active_storage/sfx/2048/2048-84.wav');
+// Función para generar un sonido de dados/retro usando la tarjeta de sonido del navegador
+function reproducirSonidoDados() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Creamos un oscilador (el que hace el pitido)
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        // Tipo de onda retro (ruido de juego de consola vieja)
+        oscillator.type = 'triangle'; 
+        
+        // Hace que el sonido empiece agudo y caiga rápido (efecto de choque/caída)
+        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+        
+        // Controlamos el volumen para que disminuya hasta apagarse
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.3); // Dura menos de medio segundo, perfecto para ráfagas
+    } catch (e) {
+        console.log("Audio no soportado o bloqueado por el navegador aún.");
+    }
+}
 
 function actualizarCantidadDados() {
     const cantidadSelect = parseInt(selector.value);
@@ -35,13 +62,12 @@ document.getElementById('roll-btn').addEventListener('click', function() {
     selector.disabled = true;
     button.textContent = 'Rolling!';
 
-    // --- REPRODUCIR SONIDO ---
-    sonidoDados.currentTime = 0; // Reinicia el audio si se vuelve a pulsar rápido
-    sonidoDados.play().catch(error => {
-        console.log("El navegador bloqueó el audio hasta que el usuario interactúe con la página.");
-    });
+    // --- REPRODUCIR SONIDO GENERADO ---
+    reproducirSonidoDados();
+    // Hacemos un segundo sonido rápido en medio del giro para dar más impacto
+    setTimeout(() => { reproducirSonidoDados(); }, 300);
 
-    let tiempoRestante = 1; // 1 segundo exacto de duración
+    let tiempoRestante = 1; 
 
     for (let i = 1; i <= cantidadDadosActivos; i++) {
         const statusElement = document.getElementById(`status-${i}`);
@@ -70,6 +96,9 @@ document.getElementById('roll-btn').addEventListener('click', function() {
             clearInterval(cuentaRegresiva);
             clearInterval(fiestaColores);
 
+            // Sonido final justo al detenerse los dados
+            reproducirSonidoDados();
+
             for (let i = 1; i <= cantidadDadosActivos; i++) {
                 const diceElement = document.getElementById(`dice-${i}`);
                 
@@ -90,7 +119,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
             selector.disabled = false;
             button.textContent = 'Roll Dice';
         }
-    }, 1000);
+    }, 1000); 
 });
 
 actualizarCantidadDados();
