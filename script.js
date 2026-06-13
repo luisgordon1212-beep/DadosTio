@@ -1,7 +1,16 @@
 const colores = ['azul', 'amarillo', 'verde', 'morado', 'naranja', 'rojo'];
 const selector = document.getElementById('dice-selector');
 
-// Función que oculta o muestra los dados según el menú desplegable
+// Objeto para guardar el conteo total de cada color
+const estadisticas = {
+    azul: 0,
+    amarillo: 0,
+    verde: 0,
+    morado: 0,
+    naranja: 0,
+    rojo: 0
+};
+
 function actualizarCantidadDados() {
     const cantidadSelect = parseInt(selector.value);
     for (let i = 1; i <= 4; i++) {
@@ -14,7 +23,6 @@ function actualizarCantidadDados() {
     }
 }
 
-// Escuchamos cuando el usuario cambia la opción del selector
 selector.addEventListener('change', actualizarCantidadDados);
 
 document.getElementById('roll-btn').addEventListener('click', function() {
@@ -22,12 +30,11 @@ document.getElementById('roll-btn').addEventListener('click', function() {
     const cantidadDadosActivos = parseInt(selector.value);
     
     button.disabled = true;
-    selector.disabled = true; // Bloqueamos el selector mientras gira
+    selector.disabled = true;
     button.textContent = '¡Girando!';
 
     let tiempoRestante = 3;
 
-    // 1. Iniciamos los textos de ROLLING... y el giro loco solo en los dados activos
     for (let i = 1; i <= cantidadDadosActivos; i++) {
         const statusElement = document.getElementById(`status-${i}`);
         statusElement.textContent = `ROLLING... ${tiempoRestante}s`;
@@ -36,7 +43,6 @@ document.getElementById('roll-btn').addEventListener('click', function() {
         document.getElementById(`dice-${i}`).classList.add('spinning');
     }
 
-    // 2. Fiesta rápida de cambio de colores (cada 70ms) en dados activos
     const fiestaColores = setInterval(() => {
         for (let i = 1; i <= cantidadDadosActivos; i++) {
             const diceElement = document.getElementById(`dice-${i}`);
@@ -45,7 +51,6 @@ document.getElementById('roll-btn').addEventListener('click', function() {
         }
     }, 70);
 
-    // 3. Cuenta regresiva de 3 segundos
     const cuentaRegresiva = setInterval(() => {
         tiempoRestante--;
         
@@ -57,26 +62,31 @@ document.getElementById('roll-btn').addEventListener('click', function() {
             clearInterval(cuentaRegresiva);
             clearInterval(fiestaColores);
 
-            // 4. Detener la animación y fijar los colores finales
+            // Lista temporal para guardar los colores finales de esta tirada
             for (let i = 1; i <= cantidadDadosActivos; i++) {
                 const diceElement = document.getElementById(`dice-${i}`);
                 
                 diceElement.classList.remove('spinning');
                 document.getElementById(`status-${i}`).classList.remove('active');
                 
+                // Determinamos el color final del dado
                 const colorFinal = colores[Math.floor(Math.random() * colores.length)];
                 diceElement.className = 'dice ' + colorFinal;
                 
-                diceElement.style.transform = 'scale(1.15)';
+                // ¡AQUÍ SUMAMOS A LAS ESTADÍSTICAS!
+                estadisticas[colorFinal]++;
+                // Actualizamos el número visualmente en el HTML
+                document.getElementById(`count-${colorFinal}`).textContent = estadisticas[colorFinal];
+                
+                diceElement.style.transform = 'scale(1.12)';
                 setTimeout(() => { diceElement.style.transform = 'scale(1)'; }, 150);
             }
 
             button.disabled = false;
-            selector.disabled = false; // Desbloqueamos el selector
+            selector.disabled = false;
             button.textContent = 'Tirar Dados';
         }
     }, 1000);
 });
 
-// Inicializamos la cantidad de dados por defecto al cargar la página
 actualizarCantidadDados();
