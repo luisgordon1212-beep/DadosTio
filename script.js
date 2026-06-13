@@ -10,8 +10,35 @@ const estadisticas = {
     rojo: 0
 };
 
-// LLAMAMOS AL ARCHIVO LOCAL QUE SUBISTE A TU GITHUB (Carga instantánea)
-const sonidoDadosReales = new Audio('dados.mp3');
+// Función para generar un sonido de dados/retro usando la tarjeta de sonido del navegador
+function reproducirSonidoDados() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Creamos un oscilador (el que hace el pitido)
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        // Tipo de onda retro (ruido de juego de consola vieja)
+        oscillator.type = 'triangle'; 
+        
+        // Hace que el sonido empiece agudo y caiga rápido (efecto de choque/caída)
+        oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+        
+        // Controlamos el volumen para que disminuya hasta apagarse
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.3); // Dura menos de medio segundo, perfecto para ráfagas
+    } catch (e) {
+        console.log("Audio no soportado o bloqueado por el navegador aún.");
+    }
+}
 
 function actualizarCantidadDados() {
     const cantidadSelect = parseInt(selector.value);
@@ -35,11 +62,10 @@ document.getElementById('roll-btn').addEventListener('click', function() {
     selector.disabled = true;
     button.textContent = 'Rolling!';
 
-    // --- REPRODUCIR SONIDO DESDE TU PROPIO GITHUB ---
-    sonidoDadosReales.currentTime = 0; 
-    sonidoDadosReales.play().catch(error => {
-        console.log("El navegador bloqueó el audio. Haz un clic en la pantalla antes de girar.");
-    });
+    // --- REPRODUCIR SONIDO GENERADO ---
+    reproducirSonidoDados();
+    // Hacemos un segundo sonido rápido en medio del giro para dar más impacto
+    setTimeout(() => { reproducirSonidoDados(); }, 300);
 
     let tiempoRestante = 1; 
 
@@ -69,6 +95,9 @@ document.getElementById('roll-btn').addEventListener('click', function() {
         } else {
             clearInterval(cuentaRegresiva);
             clearInterval(fiestaColores);
+
+            // Sonido final justo al detenerse los dados
+            reproducirSonidoDados();
 
             for (let i = 1; i <= cantidadDadosActivos; i++) {
                 const diceElement = document.getElementById(`dice-${i}`);
