@@ -10,24 +10,34 @@
     <div class="game-container">
         <h1>🎲 ¡Lanza los Dados de Toji! 🎲</h1>
         
+        <!-- Menu de selección inspirado en la imagen image_0c00c5.png -->
+        <div class="selector-container">
+            <select id="dice-selector" class="custom-select">
+                <option value="1">1 DADO</option>
+                <option value="2">2 DADOS</option>
+                <option value="3">3 DADOS</option>
+                <option value="4" selected>4 DADOS</option>
+            </select>
+        </div>
+        
         <div class="dice-grid">
             <!-- Bloque del Dado 1 -->
-            <div class="dice-wrapper">
+            <div id="wrapper-1" class="dice-wrapper">
                 <div id="status-1" class="roll-status">ROLLING...</div>
                 <div id="dice-1" class="dice azul">●</div>
             </div>
             <!-- Bloque del Dado 2 -->
-            <div class="dice-wrapper">
+            <div id="wrapper-2" class="dice-wrapper">
                 <div id="status-2" class="roll-status">ROLLING...</div>
                 <div id="dice-2" class="dice amarillo">●</div>
             </div>
             <!-- Bloque del Dado 3 -->
-            <div class="dice-wrapper">
+            <div id="wrapper-3" class="dice-wrapper">
                 <div id="status-3" class="roll-status">ROLLING...</div>
                 <div id="dice-3" class="dice verde">●</div>
             </div>
             <!-- Bloque del Dado 4 -->
-            <div class="dice-wrapper">
+            <div id="wrapper-4" class="dice-wrapper">
                 <div id="status-4" class="roll-status">ROLLING...</div>
                 <div id="dice-4" class="dice morado">●</div>
             </div>
