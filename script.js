@@ -33,8 +33,9 @@ document.getElementById('roll-btn').addEventListener('click', function() {
     selector.disabled = true;
     button.textContent = '¡Girando!';
 
-    let tiempoRestante = 3;
+    let tiempoRestante = 2; // Sazón calibrado a 2 segundos
 
+    // 1. Iniciamos los textos y la animación en los dados activos
     for (let i = 1; i <= cantidadDadosActivos; i++) {
         const statusElement = document.getElementById(`status-${i}`);
         statusElement.textContent = `ROLLING... ${tiempoRestante}s`;
@@ -43,6 +44,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
         document.getElementById(`dice-${i}`).classList.add('spinning');
     }
 
+    // 2. Fiesta rápida de colores cada 70ms mientras gira
     const fiestaColores = setInterval(() => {
         for (let i = 1; i <= cantidadDadosActivos; i++) {
             const diceElement = document.getElementById(`dice-${i}`);
@@ -51,6 +53,7 @@ document.getElementById('roll-btn').addEventListener('click', function() {
         }
     }, 70);
 
+    // 3. Cuenta regresiva que corre segundo a segundo
     const cuentaRegresiva = setInterval(() => {
         tiempoRestante--;
         
@@ -59,25 +62,25 @@ document.getElementById('roll-btn').addEventListener('click', function() {
                 document.getElementById(`status-${i}`).textContent = `ROLLING... ${tiempoRestante}s`;
             }
         } else {
+            // Cuando llega a 0 (a los 2 segundos exactos) se detiene todo
             clearInterval(cuentaRegresiva);
             clearInterval(fiestaColores);
 
-            // Lista temporal para guardar los colores finales de esta tirada
+            // 4. Frenazo en seco y guardado de estadísticas
             for (let i = 1; i <= cantidadDadosActivos; i++) {
                 const diceElement = document.getElementById(`dice-${i}`);
                 
                 diceElement.classList.remove('spinning');
                 document.getElementById(`status-${i}`).classList.remove('active');
                 
-                // Determinamos el color final del dado
                 const colorFinal = colores[Math.floor(Math.random() * colores.length)];
                 diceElement.className = 'dice ' + colorFinal;
                 
-                // ¡AQUÍ SUMAMOS A LAS ESTADÍSTICAS!
+                // Sumamos al contador del juego
                 estadisticas[colorFinal]++;
-                // Actualizamos el número visualmente en el HTML
                 document.getElementById(`count-${colorFinal}`).textContent = estadisticas[colorFinal];
                 
+                // Pequeño efecto de impacto visual al caer
                 diceElement.style.transform = 'scale(1.12)';
                 setTimeout(() => { diceElement.style.transform = 'scale(1)'; }, 150);
             }
